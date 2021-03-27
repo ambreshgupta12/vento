@@ -1,8 +1,8 @@
 name: vento
-description: A new Flutter project.
+description: A package for seemless data and api handling in Flutter
 version: 0.0.1
-author:
-homepage:
+author: Ashish Rawat
+homepage: https://github.com/ashishrawat2911/vento
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
