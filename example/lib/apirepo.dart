@@ -1,8 +1,5 @@
-# vento
+import 'package:vento/vento.dart';
 
-A package for data and api handling in Flutter
-
-```dart
 class ApiRepository extends BaseVentoRepo {
 
   Future<Result<String>> getApiData() {
@@ -14,5 +11,3 @@ class ApiRepository extends BaseVentoRepo {
   }
 
 }
-
-```
