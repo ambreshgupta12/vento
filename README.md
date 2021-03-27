@@ -26,7 +26,14 @@ class ApiRepository extends BaseVentoRepo {
 }
 
 ```
-
+```
+Result
+    -> Success
+    -> Failure
+Success will provide the data
+Failure will provide the ResultError (Check above on the getApiData method in Repo)
+```
+We will use bloc to 
 ```dart
 class ApiBloc extends VentoBloc<String> {
   ApiRepository apiRepository = ApiRepository();
