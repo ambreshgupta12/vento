@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vento/src/network_state/error/result_error.dart';
 
-import 'api_result_state.dart';
+import 'result_state.dart';
 
 typedef ResultErrorWidget = Widget Function(ResultError error);
-typedef ResultLoadingWidget = Widget Function(bool isReloading);
+typedef ResultLoadingWidget = Widget Function();
 typedef ReturnWidget = Widget Function();
 typedef ResultDataWidget<T> = Widget Function(T value, bool isNextLoading);
 
@@ -13,19 +13,20 @@ class VentoStateBuilder<T> extends StatelessWidget {
   final ResultState<T> state;
   final ResultDataWidget<T> dataWidget;
   final ResultLoadingWidget loadingWidget;
-  final ResultLoadingWidget nextReLoadingWidget;
   final ReturnWidget idleWidget;
   final ResultErrorWidget errorWidget;
   final bool showLoadingInitially;
 
-  VentoStateBuilder(
-      {@required this.state,
-      @required this.dataWidget,
-      @required this.loadingWidget,
-      @required this.errorWidget,
-      this.idleWidget,
-      this.showLoadingInitially = true,
-      this.nextReLoadingWidget});
+  VentoStateBuilder({
+    @required this.state,
+    @required this.dataWidget,
+    @required this.loadingWidget,
+    @required this.errorWidget,
+    this.idleWidget,
+    this.showLoadingInitially = true,
+  })  : assert(dataWidget != null),
+        assert(loadingWidget != null),
+        assert(errorWidget != null);
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,7 @@ class VentoStateBuilder<T> extends StatelessWidget {
         return idleWidget();
       },
       loading: () {
-        return loadingWidget(false);
+        return loadingWidget();
       },
       data: (T value) {
         return dataWidget(value, false);
@@ -72,7 +73,10 @@ class VentoBlocBuilder<T extends Cubit<ResultState<S>>, S>
       @required this.errorWidget,
       this.idleWidget,
       this.showLoadingInitially = true,
-      this.listener});
+      this.listener})
+      : assert(dataWidget != null),
+        assert(loadingWidget != null),
+        assert(errorWidget != null);
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +96,7 @@ class VentoBlocBuilder<T extends Cubit<ResultState<S>>, S>
         return idleWidget();
       },
       loading: () {
-        return loadingWidget(false);
+        return loadingWidget();
       },
       data: (S data) {
         return dataWidget(data, false);

@@ -37,7 +37,7 @@ abstract class VentoBloc<T> extends Cubit<ResultState<T>> {
     );
   }
 
-  getApiData(
+  getData(
     Future<Result<T>> apiData, {
     bool isUpdate = false,
     bool isUnNotifiedError = false,

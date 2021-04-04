@@ -5,6 +5,6 @@ class ApiBloc extends VentoBloc<String> {
   ApiRepository apiRepository = ApiRepository();
 
   getApi() {
-    getApiData(apiRepository.getApiData());
+    getData(apiRepository.getApiData());
   }
 }

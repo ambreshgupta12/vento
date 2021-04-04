@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:vento/src/network_state/error/result_error.dart';
 
-part 'api_result_state.freezed.dart';
+part 'result_state.freezed.dart';
 
 @freezed
 abstract class ResultState<T> with _$ResultState<T> {
