@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:example/api_client.dart';
 import 'package:example/model/movie_response.dart';
+import 'package:example/network/api_client.dart';
 import 'package:vento/vento.dart';
 
 class ApiRepository extends BaseVentoRepo {
