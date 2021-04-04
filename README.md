@@ -1,5 +1,6 @@
 ## ⚠️ In progress ⚠️
 # vento 0.0.1 
+![CI](https://github.com/ashishrawat2911/vento/workflows/Build/badge.svg)
 
 
 A package for data and api handling in Flutter
