@@ -40,7 +40,6 @@ class _PaginationPageState extends State<PaginationPage> {
               MovieWidget(
                 value.results,
                 scrollPhysics: NeverScrollableScrollPhysics(),
-                // scrollController: _controller,
                 shrinkWrap: true,
               ),
               Visibility(
