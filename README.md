@@ -1,7 +1,8 @@
 ## ⚠️ In progress ⚠️
-# vento 0.0.1 
-![CI](https://github.com/ashishrawat2911/vento/workflows/Build/badge.svg)
 
+# vento 0.0.1
+
+![CI](https://github.com/ashishrawat2911/vento/workflows/Build/badge.svg)
 
 A package for data and api handling in Flutter
 
@@ -29,6 +30,7 @@ class ApiRepository extends BaseVentoRepo {
 }
 
 ```
+
 ```
 Result
     -> Success
@@ -36,13 +38,15 @@ Result
 Success will provide the data
 Failure will provide the ResultError (Check above on the getApiData method in Repo)
 ```
-We will use bloc to 
+
+We will use bloc to
+
 ```dart
 class ApiBloc extends VentoBloc<String> {
   ApiRepository apiRepository = ApiRepository();
 
   getApi() {
-    getApiData(apiRepository.getApiData());
+    getData(apiRepository.getApiData());
   }
 }
 ```
