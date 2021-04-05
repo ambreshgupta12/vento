@@ -35,7 +35,7 @@ class MoviePaginationBloc extends VentoBloc<MovieResponse> {
   */
     var data = (state as DataState<MovieResponse>).data;
     getSpecificApiData<MovieResponse>(
-      await apiRepository.getMovie(),
+      apiRepository.getMovie(),
       emitValue: (MovieResponse value) {
         data.results.addAll(value.results);
         data.page = value.page;
@@ -43,6 +43,7 @@ class MoviePaginationBloc extends VentoBloc<MovieResponse> {
         data.totalResults = data.totalResults + value.totalResults;
         return data;
       },
+      isNextLoading: true,
       isUnNotifiedError: true,
     );
   }

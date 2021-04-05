@@ -20,7 +20,7 @@ class MovieBlocWithDiffResState extends VentoBloc<List<Movie>> {
     );
 * */
     getSpecificApiData<MovieResponse>(
-      await apiRepository.getMovie(),
+      apiRepository.getMovie(),
       emitValue: (value) {
         return value?.results ?? [];
       },
