@@ -43,6 +43,7 @@ class MoviePaginationBloc extends VentoBloc<MovieResponse> {
         data.totalResults = data.totalResults + value.totalResults;
         return data;
       },
+      isNextLoading: true,
       isUnNotifiedError: true,
     );
   }
