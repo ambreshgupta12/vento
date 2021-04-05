@@ -27,6 +27,11 @@ abstract class VentoBloc<T> extends Cubit<ResultState<T>> {
     emit(ResultState<T>.data(data: data));
   }
 
+  emitNextLoading(T data) {
+    _data = data;
+    emit(ResultState<T>.nextPageLoading(data: data));
+  }
+
   emitError(ResultError error) {
     emit(ResultState.error(resultError: error));
   }
@@ -40,14 +45,20 @@ abstract class VentoBloc<T> extends Cubit<ResultState<T>> {
   getData(
     Future<Result<T>> apiData, {
     bool isUpdate = false,
+    bool isNextLoading = false,
     bool isUnNotifiedError = false,
     VoidCallback onLoading,
     ValueChanged<ResultError> onError,
     ValueChanged<T> onData,
   }) async {
-    if (!isUpdate) {
+    if (isNextLoading) {
       if (onLoading != null) onLoading();
-      emitLoading();
+      emitNextLoading(state.dataState);
+    } else {
+      if (!isUpdate) {
+        if (onLoading != null) onLoading();
+        emitLoading();
+      }
     }
     (await apiData).map(success: (Success<T> value) {
       if (onData != null) onData(value.data);
@@ -67,33 +78,39 @@ abstract class VentoBloc<T> extends Cubit<ResultState<T>> {
   }
 
   getSpecificApiData<@required G>(
-    Result<G> apiData, {
+    Future<Result<G>> apiData, {
     @required VoidCallbackKKK<G, T> emitValue,
     bool isUnNotifiedError = false,
     bool isUpdate = false,
+    bool isNextLoading = false,
     VoidCallback onLoading,
     ValueChanged<ResultError> onError,
     ValueChanged<T> onData,
   }) async {
-    if (!isUpdate) {
+    if (isNextLoading) {
       if (onLoading != null) onLoading();
-      emitLoading();
-    }
-    (apiData).map(success: (Success<G> value) {
-      T data = emitValue(value.data);
-      if (onData != null) onData(data);
-      emitData(data);
-    }, failure: (Failure<G> value) {
-      if (onError != null) onError(value.error);
+      emitNextLoading(state.dataState);
+    } else {
       if (!isUpdate) {
-        if (isUnNotifiedError) {
-          emitUnNotifiedError(value.error);
-        } else {
-          emitError(value.error);
-        }
-      } else {
-        emitUnNotifiedError(value.error);
+        if (onLoading != null) onLoading();
+        emitLoading();
       }
-    });
+      (await apiData).map(success: (Success<G> value) {
+        T data = emitValue(value.data);
+        if (onData != null) onData(data);
+        emitData(data);
+      }, failure: (Failure<G> value) {
+        if (onError != null) onError(value.error);
+        if (!isUpdate) {
+          if (isUnNotifiedError) {
+            emitUnNotifiedError(value.error);
+          } else {
+            emitError(value.error);
+          }
+        } else {
+          emitUnNotifiedError(value.error);
+        }
+      });
+    }
   }
 }
