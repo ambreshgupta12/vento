@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vento/src/network_state/error/result_error.dart';
 import 'package:vento/src/network_state/network_state.dart';
 
-typedef VoidCallbackKKK<G, T> = T Function(G value);
+typedef EmitValueCallBack<G, T> = T Function(G value);
 
 abstract class VentoBloc<T> extends Cubit<ResultState<T>> {
   VentoBloc() : super(ResultState.idle());
@@ -11,12 +11,6 @@ abstract class VentoBloc<T> extends Cubit<ResultState<T>> {
   T _data;
 
   T get data => _data;
-
-  bool get isLoading => state is LoadingState;
-
-  bool get isDataState => state is DataState;
-
-  bool get isErrorState => state is ErrorState;
 
   emitLoading() {
     emit(ResultState.loading());
@@ -53,7 +47,7 @@ abstract class VentoBloc<T> extends Cubit<ResultState<T>> {
   }) async {
     if (isNextLoading) {
       if (onLoading != null) onLoading();
-      emitNextLoading(state.dataState);
+      _nextLoading();
     } else {
       if (!isUpdate) {
         if (onLoading != null) onLoading();
@@ -79,7 +73,7 @@ abstract class VentoBloc<T> extends Cubit<ResultState<T>> {
 
   getSpecificApiData<@required G>(
     Future<Result<G>> apiData, {
-    @required VoidCallbackKKK<G, T> emitValue,
+    @required EmitValueCallBack<G, T> emitValue,
     bool isUnNotifiedError = false,
     bool isUpdate = false,
     bool isNextLoading = false,
@@ -89,7 +83,7 @@ abstract class VentoBloc<T> extends Cubit<ResultState<T>> {
   }) async {
     if (isNextLoading) {
       if (onLoading != null) onLoading();
-      emitNextLoading(state.dataState);
+      _nextLoading();
     } else {
       if (!isUpdate) {
         if (onLoading != null) onLoading();
@@ -112,5 +106,11 @@ abstract class VentoBloc<T> extends Cubit<ResultState<T>> {
         }
       });
     }
+  }
+
+  _nextLoading() {
+    var data = state.dataState;
+    assert(data != null);
+    emitNextLoading(data);
   }
 }

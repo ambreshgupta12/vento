@@ -19,7 +19,7 @@ checkResult(Result<String> result) {
       expect(data, "Hello");
     },
     failure: (error) {
-      expect(error.resultErrorCode, 0);
+      expect(error.errorCode, 0);
     },
   );
 }

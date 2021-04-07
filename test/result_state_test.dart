@@ -30,7 +30,7 @@ void checkResultState(ResultState<String> resultState) {
     },
     error: (resultError) {
       expect(resultError.errorMessage, "Error");
-      expect(resultError.resultErrorCode, 0);
+      expect(resultError.errorCode, 0);
       expect(resultState is ErrorState<String>, resultState.isErrorState);
     },
     nextPageLoading: (data) {
@@ -41,7 +41,7 @@ void checkResultState(ResultState<String> resultState) {
     unNotifiedError: (data, resultError) {
       expect(data, "Hello");
       expect(resultError.errorMessage, "Error");
-      expect(resultError.resultErrorCode, 0);
+      expect(resultError.errorCode, 0);
       expect(resultState is UnNotifiedErrorState<String>,
           resultState.isErrorState);
     },
