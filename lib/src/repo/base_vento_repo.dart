@@ -1,7 +1,7 @@
 import 'package:vento/src/network_state/error/result_error.dart';
 import 'package:vento/src/network_state/network_state.dart';
 
-typedef ResultErrorChanged<T> = ResultError Function(T value);
+typedef ResultErrorChanged<T> = ResultError Function(T error);
 
 class BaseVentoRepo {
   Future<Result<T>> getResult<T>(
