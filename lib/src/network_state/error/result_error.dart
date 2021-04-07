@@ -1,6 +1,6 @@
 class ResultError {
-  int resultErrorCode;
+  int errorCode;
   String errorMessage;
 
-  ResultError(this.resultErrorCode, this.errorMessage);
+  ResultError(this.errorCode, this.errorMessage);
 }
