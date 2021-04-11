@@ -4,7 +4,7 @@
 
 ![CI](https://github.com/ashishrawat2911/vento/workflows/Build/badge.svg)
 
-A package for data and api handling in Flutter
+A wrapper package for data and api handling in Flutter built on top of [flutter_bloc]() and [freezed]() package.
 
 ## Create Repository class
 

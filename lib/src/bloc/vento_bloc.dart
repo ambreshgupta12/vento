@@ -3,41 +3,65 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:vento/src/network_state/error/result_error.dart';
 import 'package:vento/src/network_state/network_state.dart';
 
+///EmitValueCallBack will take the data what
+///every you want to show in the ResultState
 typedef EmitValueCallBack<G, T> = T Function(G value);
 
-abstract class VentoBloc<T> extends Cubit<ResultState<T>> {
-  VentoBloc() : super(ResultState.idle());
+///VentoBloc is a wrapper bloc class on top of the flutter_bloc Cubit class
+abstract class VentoBloc<@required T> extends Cubit<ResultState<T>> {
+  ///Initially the state of the ResultState
+  VentoBloc() : super(const ResultState.idle());
 
   T _data;
 
+  /// getter for T data
   T get data => _data;
 
-  emitLoading() {
-    emit(ResultState.loading());
+  /// emitLoading method will tell the cubit that
+  /// emit the Loading State
+  void emitLoading() {
+    emit(const ResultState.loading());
   }
 
-  emitData(T data) {
+  /// emitData will add the data state
+  void emitData(T data) {
     _data = data;
     emit(ResultState<T>.data(data: data));
   }
 
-  emitNextLoading(T data) {
+  /// emitNextLoading will tell the state that
+  /// emit Loading with already data available
+  /// which is emitNextLoading
+  void emitNextLoading() {
+    final data = state.dataState;
+    assert(data != null, '$data cannot be null');
     _data = data;
     emit(ResultState<T>.nextPageLoading(data: data));
   }
 
-  emitError(ResultError error) {
+  /// emit the error state which will replace the it with
+  /// previous state
+  void emitError(ResultError error) {
     emit(ResultState.error(resultError: error));
   }
 
-  emitUnNotifiedError(ResultError error) {
+  ///
+  void emitUnNotifiedError(ResultError error) {
     emit(
       ResultState.unNotifiedError(resultError: error, data: _data),
     );
   }
 
-  getData(
-    Future<Result<T>> apiData, {
+  ///---------------------Important----------------------
+  ///if the T data is same as the data coming from api or other
+  ///then use [getData] otherwise [getSpecificApiData]
+
+  ///[getData] will take the [Future] data and actions automatically
+  ///Initially loading will get called
+  ///then it will check for data
+  ///if data is available then data state will be called else error state
+  Future<void> getData(
+    Future<Result<T>> data, {
     bool isUpdate = false,
     bool isNextLoading = false,
     bool isUnNotifiedError = false,
@@ -47,31 +71,36 @@ abstract class VentoBloc<T> extends Cubit<ResultState<T>> {
   }) async {
     if (isNextLoading) {
       if (onLoading != null) onLoading();
-      _nextLoading();
+      emitNextLoading();
     } else {
       if (!isUpdate) {
         if (onLoading != null) onLoading();
         emitLoading();
       }
     }
-    (await apiData).map(success: (Success<T> value) {
-      if (onData != null) onData(value.data);
-      emitData(value.data);
-    }, failure: (Failure<T> value) {
-      if (onError != null) onError(value.error);
+    (await data).when(success: (T data) {
+      if (onData != null) onData(data);
+      emitData(data);
+    }, failure: (ResultError error) {
+      if (onError != null) onError(error);
       if (!isUpdate) {
         if (isUnNotifiedError) {
-          emitUnNotifiedError(value.error);
+          emitUnNotifiedError(error);
         } else {
-          emitError(value.error);
+          emitError(error);
         }
       } else {
-        emitUnNotifiedError(value.error);
+        emitUnNotifiedError(error);
       }
     });
   }
 
-  getSpecificApiData<@required G>(
+  ///[getData] will take the [Future] data and actions automatically
+  ///emitValue will manipulate the data
+  ///Initially loading will get called
+  ///then it will check for data
+  ///if data is available then data state will be called else error state
+  Future<void> getSpecificApiData<@required G>(
     Future<Result<G>> apiData, {
     @required EmitValueCallBack<G, T> emitValue,
     bool isUnNotifiedError = false,
@@ -81,36 +110,31 @@ abstract class VentoBloc<T> extends Cubit<ResultState<T>> {
     ValueChanged<ResultError> onError,
     ValueChanged<T> onData,
   }) async {
+    assert(emitValue != null, '$emitValue cannot be null');
     if (isNextLoading) {
       if (onLoading != null) onLoading();
-      _nextLoading();
+      emitNextLoading();
     } else {
       if (!isUpdate) {
         if (onLoading != null) onLoading();
         emitLoading();
       }
-      (await apiData).map(success: (Success<G> value) {
-        T data = emitValue(value.data);
+      (await apiData).when(success: (G responseData) {
+        final data = emitValue(responseData);
         if (onData != null) onData(data);
         emitData(data);
-      }, failure: (Failure<G> value) {
-        if (onError != null) onError(value.error);
+      }, failure: (ResultError error) {
+        if (onError != null) onError(error);
         if (!isUpdate) {
           if (isUnNotifiedError) {
-            emitUnNotifiedError(value.error);
+            emitUnNotifiedError(error);
           } else {
-            emitError(value.error);
+            emitError(error);
           }
         } else {
-          emitUnNotifiedError(value.error);
+          emitUnNotifiedError(error);
         }
       });
     }
-  }
-
-  _nextLoading() {
-    var data = state.dataState;
-    assert(data != null);
-    emitNextLoading(data);
   }
 }
