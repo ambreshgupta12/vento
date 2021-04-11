@@ -1,5 +1,5 @@
 name: vento
-description: A package for data and api handling in Flutter
+description: A wrapper package for data and api handling in Flutter built on top of flutter_bloc and freezed package.
 version: 0.0.1
 author: Ashish Rawat
 homepage: https://github.com/ashishrawat2911/vento
@@ -10,9 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.0
   freezed_annotation: 0.14.1
-  flutter_bloc: 6.1.1
+  cupertino_icons: ^1.0.0
+  flutter_bloc: ^7.0.0
 
 dev_dependencies:
   flutter_test:
